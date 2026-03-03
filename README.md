@@ -4,9 +4,9 @@ A [Model Context Protocol](https://modelcontextprotocol.io) (MCP) server for HF 
 
 ## Overview
 
-IONIS (Ionospheric Neural Inference System) is an open-source machine learning system for predicting HF (shortwave) radio propagation. The datasets — curated from the world's largest amateur radio telemetry networks — are distributed as SQLite files on [SourceForge](https://sourceforge.net/p/ionis-ai).
+IONIS (Ionospheric Neural Inference System) is an open-source machine learning system for predicting HF (shortwave) radio propagation. The datasets — curated from the world's largest amateur radio telemetry networks — are distributed as SQLite files on [SourceForge](https://sourceforge.net/projects/ionis-ai/).
 
-**ionis-mcp** bridges those datasets to AI assistants via the Model Context Protocol. Install the package, point it at your downloaded data, and Claude (Desktop or Code) can answer propagation questions using 10 specialized tools — no SQL required.
+**ionis-mcp** bridges those datasets to AI assistants via the Model Context Protocol. Install the package, download data, and Claude (Desktop or Code) can answer propagation questions using 10 specialized tools — no SQL required.
 
 **Example questions:**
 - "When is 20m open from Idaho to Europe?"
@@ -29,29 +29,55 @@ IONIS (Ionospheric Neural Inference System) is an open-source machine learning s
 
 All signature tables share an identical 13-column schema (tx\_grid, rx\_grid, band, hour, month, median\_snr, spot\_count, snr\_std, reliability, avg\_sfi, avg\_kp, avg\_distance, avg\_azimuth) — ready for cross-source analysis.
 
-## Install
+## Quick Start
 
 ```bash
+# 1. Install
 pip install ionis-mcp
+
+# 2. Download datasets (to default location: ~/.ionis-mcp/data/)
+ionis-download --bundle minimal          # ~430 MB — contest + solar + grids
+ionis-download --bundle recommended      # ~1.1 GB — adds PSKR + DSCOVR
+ionis-download --bundle full             # ~15 GB  — all 9 datasets
+
+# 3. Configure Claude (see below) and restart — tools appear automatically
 ```
 
-**Requirements**: Python 3.10+. Single dependency: [`mcp`](https://pypi.org/project/mcp/). No numpy, pandas, or torch — pure Python with stdlib `sqlite3`.
+That's it. Both `ionis-download` and `ionis-mcp` use the same default data directory. No environment variables needed.
 
-## Download Data
+### Default Data Directory
 
-Download SQLite files from [SourceForge](https://sourceforge.net/p/ionis-ai):
+| Platform | Location |
+|----------|----------|
+| Linux / macOS | `~/.ionis-mcp/data/` |
+| Windows | `%LOCALAPPDATA%\ionis-mcp\data\` |
 
-**Minimum (~430 MB)** — enough for basic propagation queries:
-- `contest_signatures.sqlite` — 25 years of CQ contest data
-- `grid_lookup.sqlite` — 31.7K Maidenhead grid coordinates
-- `solar_indices.sqlite` — SFI, SSN, Kp from 2000-2026
+Override with a custom path:
 
-**Recommended (~1.1 GB)** — contest + recent FT8:
-- Add `pskr_signatures.sqlite` — live PSK Reporter data
+```bash
+# Download to custom location
+ionis-download --bundle minimal /path/to/my/data
 
-**Full (~15 GB)** — all 9 SQLite files, complete propagation picture.
+# Tell the server where to find it
+ionis-mcp --data-dir /path/to/my/data
+# or
+export IONIS_DATA_DIR=/path/to/my/data
+```
 
-## Configure
+### Download Individual Datasets
+
+```bash
+# Pick specific datasets
+ionis-download --datasets wspr,rbn,grids,solar
+
+# See all available datasets and bundles
+ionis-download --list
+
+# Re-download (overwrite existing)
+ionis-download --bundle minimal --force
+```
+
+## Configure Claude
 
 ### Claude Desktop
 
@@ -61,9 +87,21 @@ Add to `claude_desktop_config.json`:
 {
   "mcpServers": {
     "ionis": {
+      "command": "ionis-mcp"
+    }
+  }
+}
+```
+
+If you downloaded to a custom location, add the env override:
+
+```json
+{
+  "mcpServers": {
+    "ionis": {
       "command": "ionis-mcp",
       "env": {
-        "IONIS_DATA_DIR": "/path/to/ionis-ai-datasets/v1.0"
+        "IONIS_DATA_DIR": "/path/to/my/data"
       }
     }
   }
@@ -78,10 +116,7 @@ Add to `.claude/settings.json`:
 {
   "mcpServers": {
     "ionis": {
-      "command": "ionis-mcp",
-      "env": {
-        "IONIS_DATA_DIR": "/path/to/ionis-ai-datasets/v1.0"
-      }
+      "command": "ionis-mcp"
     }
   }
 }
@@ -107,7 +142,7 @@ Restart Claude. Tools appear automatically.
 ## Data Directory Layout
 
 ```
-$IONIS_DATA_DIR/
+~/.ionis-mcp/data/                  (or $IONIS_DATA_DIR)
 ├── propagation/
 │   ├── wspr-signatures/wspr_signatures_v2.sqlite      (8.4 GB, 93.6M rows)
 │   ├── rbn-signatures/rbn_signatures.sqlite            (5.6 GB, 67.3M rows)
@@ -145,7 +180,7 @@ ionis-mcp --transport streamable-http --port 8000
 | Repository | Purpose |
 |-----------|---------|
 | [ionis-validate](https://pypi.org/project/ionis-validate/) | IONIS model validation suite (PyPI) |
-| [IONIS Datasets](https://sourceforge.net/p/ionis-ai) | Distributed dataset files (SourceForge) |
+| [IONIS Datasets](https://sourceforge.net/projects/ionis-ai/) | Distributed dataset files (SourceForge) |
 
 ## License
 
@@ -155,4 +190,4 @@ GPL-3.0-or-later
 
 If you use the IONIS datasets in research, please cite:
 
-> Beam, G. (KI7MT). *IONIS: Ionospheric Neural Inference System — HF Propagation Prediction Datasets.* SourceForge, 2026. https://sourceforge.net/p/ionis-ai
+> Beam, G. (KI7MT). *IONIS: Ionospheric Neural Inference System — HF Propagation Prediction Datasets.* SourceForge, 2026. https://sourceforge.net/projects/ionis-ai/

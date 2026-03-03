@@ -1,6 +1,6 @@
 [project]
 name = "ionis-mcp"
-version = "1.0.0"
+version = "1.1.0"
 description = "MCP server for IONIS HF propagation analytics — 175M signatures from WSPR, RBN, Contest, DXpedition, and PSK Reporter"
 readme = "README.md"
 license = {text = "GPL-3.0-or-later"}
@@ -9,14 +9,39 @@ requires-python = ">=3.10"
 dependencies = [
     "mcp>=1.0",
 ]
+keywords = [
+    "amateur-radio", "ham-radio", "hf-propagation", "ionosphere", "space-weather",
+    "wspr", "rbn", "psk-reporter", "mcp", "model-context-protocol",
+    "machine-learning", "pytorch", "neural-network", "big-data", "telemetry",
+    "clickhouse", "solar-flux", "geomagnetic", "maidenhead", "propagation",
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Education",
+    "Intended Audience :: Developers",
+    "Topic :: Scientific/Engineering :: Atmospheric Science",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Communications :: Ham Radio",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: OS Independent",
+]
 
 [project.urls]
 Homepage = "https://ionis-ai.com/"
 Repository = "https://github.com/IONIS-AI/ionis-mcp"
-Datasets = "https://sourceforge.net/p/ionis-ai"
+Datasets = "https://sourceforge.net/projects/ionis-ai/"
+Issues = "https://github.com/IONIS-AI/ionis-mcp/issues"
 
 [project.scripts]
 ionis-mcp = "ionis_mcp.server:main"
+ionis-download = "ionis_mcp.download:main"
 
 [build-system]
 requires = ["hatchling"]

@@ -16,6 +16,7 @@ import sys
 
 from mcp.server.fastmcp import FastMCP
 
+from . import default_data_dir
 from .database import DatabaseManager, SIGNATURE_SOURCES
 from .grids import (
     GridLookup,
@@ -759,15 +760,32 @@ def band_summary(
 
 # ── Server Startup ──────────────────────────────────────────────────────────
 
+def _resolve_data_dir(cli_arg: str) -> str:
+    """Resolve data directory: CLI arg > env var > default location."""
+    # 1. Explicit CLI arg
+    if cli_arg:
+        return cli_arg
+
+    # 2. Environment variable
+    env_dir = os.environ.get("IONIS_DATA_DIR", "")
+    if env_dir:
+        return env_dir
+
+    # 3. Platform default
+    return default_data_dir()
+
+
 def main():
     """Entry point for ionis-mcp server."""
+    default_dir = default_data_dir()
+
     parser = argparse.ArgumentParser(
         description="IONIS MCP Server — HF Propagation Analytics",
     )
     parser.add_argument(
         "--data-dir",
-        default=os.environ.get("IONIS_DATA_DIR", ""),
-        help="Path to IONIS dataset directory (or set IONIS_DATA_DIR env var)",
+        default="",
+        help=f"Path to IONIS dataset directory (default: $IONIS_DATA_DIR or {default_dir})",
     )
     parser.add_argument(
         "--transport",
@@ -783,21 +801,18 @@ def main():
     )
     args = parser.parse_args()
 
-    data_dir = args.data_dir
-    if not data_dir:
-        print(
-            "Error: No data directory specified.\n"
-            "Set IONIS_DATA_DIR environment variable or use --data-dir.\n\n"
-            "Example:\n"
-            "  export IONIS_DATA_DIR=/path/to/ionis-ai-datasets/v1.0\n"
-            "  ionis-mcp\n\n"
-            "Download datasets from: https://sourceforge.net/p/ionis-ai",
-            file=sys.stderr,
-        )
-        sys.exit(1)
+    data_dir = _resolve_data_dir(args.data_dir)
 
     if not os.path.isdir(data_dir):
-        print(f"Error: Data directory not found: {data_dir}", file=sys.stderr)
+        print(
+            f"Error: Data directory not found: {data_dir}\n\n"
+            "Download datasets first:\n"
+            "  ionis-download --bundle minimal\n\n"
+            "Or specify a custom location:\n"
+            f"  ionis-mcp --data-dir /path/to/data\n"
+            f"  export IONIS_DATA_DIR=/path/to/data",
+            file=sys.stderr,
+        )
         sys.exit(1)
 
     # Initialize database manager
