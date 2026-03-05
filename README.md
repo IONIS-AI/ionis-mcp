@@ -1,3 +1,4 @@
+<!-- mcp-name: io.github.IONIS-AI/ionis-mcp -->
 # ionis-mcp
 
 A [Model Context Protocol](https://modelcontextprotocol.io) (MCP) server for HF radio propagation analytics, built on the [IONIS](https://ionis-ai.com/) dataset collection — 175M+ aggregated signatures derived from 14 billion WSPR, RBN, Contest, DXpedition, and PSK Reporter observations spanning 2005-2026.
