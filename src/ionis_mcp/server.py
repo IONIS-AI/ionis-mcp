@@ -787,7 +787,7 @@ def current_conditions(
     import datetime
 
     cond = fetch_current_conditions()
-    now = datetime.datetime.utcnow()
+    now = datetime.datetime.now(datetime.timezone.utc)
 
     lines = [
         f"# Propagation Report — {now.strftime('%B %d, %Y %H:%M')} UTC\n",
