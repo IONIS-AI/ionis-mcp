@@ -35,8 +35,8 @@ classifiers = [
 
 [project.urls]
 Homepage = "https://ionis-ai.com"
-Repository = "https://github.com/IONIS-AI/ionis-mcp"
-Issues = "https://github.com/IONIS-AI/ionis-mcp/issues"
+Repository = "https://github.com/qso-graph/ionis-mcp"
+Issues = "https://github.com/qso-graph/ionis-mcp/issues"
 Datasets = "https://sourceforge.net/projects/ionis-ai/files"
 
 [project.scripts]
