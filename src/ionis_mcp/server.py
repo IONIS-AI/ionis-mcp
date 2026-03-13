@@ -647,18 +647,19 @@ def dark_hour_analysis(
     return "\n".join(lines)
 
 
-# ── Tool 9: solar_conditions ───────────────────────────────────────────────
+# ── Tool 9: solar_history ──────────────────────────────────────────────────
 
 @mcp.tool()
-def solar_conditions(
+def solar_history(
     start_date: str,
     end_date: str,
     resolution: str = "daily",
 ) -> str:
-    """Query historical solar indices (SFI, SSN, Kp, Ap).
+    """Query historical solar indices (SFI, SSN, Kp, Ap) for a date range.
 
-    Returns solar flux, sunspot number, and geomagnetic indices for a
-    date range. Data from GFZ Potsdam and NOAA SWPC, 2000-2026.
+    Returns solar flux, sunspot number, and geomagnetic indices from the
+    IONIS dataset (GFZ Potsdam and NOAA SWPC, 2000-2026). For live
+    current conditions, use solar-mcp's solar_conditions tool instead.
 
     Args:
         start_date: Start date (YYYY-MM-DD)

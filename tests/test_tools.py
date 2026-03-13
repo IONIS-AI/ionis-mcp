@@ -248,22 +248,22 @@ class TestDarkHourAnalysis:
         assert "No paths found" in result
 
 
-# ── Tool 9: solar_conditions ─────────────────────────────────────────────────
+# ── Tool 9: solar_history ────────────────────────────────────────────────────
 
-class TestSolarConditionsTool:
+class TestSolarHistoryTool:
     def test_daily_query(self):
-        result = server_mod.solar_conditions("2026-03-01", "2026-03-02")
+        result = server_mod.solar_history("2026-03-01", "2026-03-02")
         assert "Solar Conditions" in result
         assert "2026-03-01" in result
 
     def test_3hour_resolution(self):
-        result = server_mod.solar_conditions(
+        result = server_mod.solar_history(
             "2026-03-01", "2026-03-01", resolution="3hour"
         )
         assert "Time" in result
 
     def test_no_data_range(self):
-        result = server_mod.solar_conditions("2030-01-01", "2030-01-02")
+        result = server_mod.solar_history("2030-01-01", "2030-01-02")
         assert "No solar data found" in result
 
 

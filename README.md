@@ -181,7 +181,7 @@ Add to `~/.gemini/settings.json` (global) or `.gemini/settings.json` (project):
 | `grid_info` | Maidenhead grid decode with solar elevation computation |
 | `compare_sources` | Cross-dataset comparison (WSPR vs RBN vs Contest vs PSKR) |
 | `dark_hour_analysis` | Classify paths by solar geometry — both-day, cross-terminator, both-dark |
-| `solar_conditions` | Historical solar indices for any date range |
+| `solar_history` | Historical solar indices for any date range |
 | `band_summary` | Band overview — hour distribution, top grid pairs, distance range |
 | `current_conditions` | Live propagation forecast — SFI, Kp, solar wind, band outlook, POTA/SOTA tips |
 
