@@ -49,3 +49,8 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/ionis_mcp"]
+
+[tool.pytest.ini_options]
+markers = [
+    "live: tests that require network access to external APIs (deselect with '-m not live')",
+]
